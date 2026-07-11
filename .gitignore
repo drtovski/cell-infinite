@@ -1,0 +1,39 @@
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# build output
+dist
+dist-ssr
+*.local
+
+# tauri
+src-tauri/target
+src-tauri/gen
+# generated icon assets (regenerate with scripts/generate_icon.py + `npm run tauri icon`)
+src-tauri/icons
+src-tauri/icon-source.png
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# editor / os
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# testing
+coverage
+package-lock.json
