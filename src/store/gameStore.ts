@@ -9,6 +9,7 @@ import {
   placementCost,
 } from '../game/economy';
 import { getCellType } from '../config/cells';
+import { isSlotUnlocked } from '../game/grid';
 import { ABILITY_MAP } from '../config/abilities';
 import { QUEST_MAP } from '../config/quests';
 import { REBIRTH_UPGRADE_MAP } from '../config/rebirthUpgrades';
@@ -168,7 +169,7 @@ export const useGame = create<GameStore>((set, get) => ({
     set((s) => {
       const type = getCellType(typeId);
       if (!s.unlockedCellTypes.includes(typeId)) return s;
-      if (slot < 0 || slot >= s.unlockedSlots) return s;
+      if (!isSlotUnlocked(slot, s.unlockedSlots)) return s;
       if (s.cells.some((c) => c.slot === slot)) return s;
       const cost = placementCost(type);
       if (s.energy.lt(cost)) return s;
@@ -182,7 +183,7 @@ export const useGame = create<GameStore>((set, get) => ({
 
   moveCell: (cellId, slot) => {
     set((s) => {
-      if (slot < 0 || slot >= s.unlockedSlots) return s;
+      if (!isSlotUnlocked(slot, s.unlockedSlots)) return s;
       if (s.cells.some((c) => c.slot === slot)) return s;
       const idx = s.cells.findIndex((c) => c.id === cellId);
       if (idx < 0) return s;
