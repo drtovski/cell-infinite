@@ -2,6 +2,28 @@ export const GRID_COLS = 3;
 export const GRID_ROWS = 3;
 export const GRID_SIZE = GRID_COLS * GRID_ROWS;
 
+/**
+ * Slots unlock center-out, not in raw index order: the starting cell lives in
+ * the middle (slot 4) so it can eventually touch four neighbours, then the
+ * orthogonal slots open, then the corners. `unlockedSlots` is a *count*; this
+ * order maps that count onto which physical slots are available.
+ */
+export const SLOT_ORDER = [4, 3, 5, 1, 7, 0, 2, 6, 8];
+
+/** The first unlocked slot — where the starting/rebirth cell is placed. */
+export const START_SLOT = SLOT_ORDER[0];
+
+/** Is this physical slot unlocked, given how many slots (a count) are open? */
+export function isSlotUnlocked(slot: number, unlockedCount: number): boolean {
+  const idx = SLOT_ORDER.indexOf(slot);
+  return idx >= 0 && idx < unlockedCount;
+}
+
+/** The unlock order index of a slot (0 = first to unlock). */
+export function slotOrderIndex(slot: number): number {
+  return SLOT_ORDER.indexOf(slot);
+}
+
 /** Orthogonal neighbours of a slot in the 3×3 lattice. */
 export function neighborSlots(slot: number): number[] {
   const r = Math.floor(slot / GRID_COLS);

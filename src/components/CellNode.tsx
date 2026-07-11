@@ -8,6 +8,7 @@ import { fx } from '../game/effects';
 import { sound } from '../audio/sound';
 import { fmt } from '../game/format';
 import { D } from '../game/decimal';
+import { isSlotUnlocked, slotOrderIndex } from '../game/grid';
 
 function hueStyle(a: number, b: number): CSSProperties {
   return { ['--hue']: a, ['--hue2']: b } as CSSProperties;
@@ -33,8 +34,8 @@ export function CellNode({ slot, onRequestPlace }: { slot: number; onRequestPlac
   }, [slot, cell]);
 
   // Locked slot ---------------------------------------------------------
-  if (slot >= unlockedSlots) {
-    const need = BALANCE.slotUnlockEnergy[slot] ?? 0;
+  if (!isSlotUnlocked(slot, unlockedSlots)) {
+    const need = BALANCE.slotUnlockEnergy[slotOrderIndex(slot)] ?? 0;
     return (
       <div className="cell locked" aria-label="Locked slot">
         <span className="cell-label muted">🔒</span>

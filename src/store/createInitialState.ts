@@ -4,9 +4,9 @@ import { ABILITIES } from '../config/abilities';
 import { QUESTS } from '../config/quests';
 import { computeDerived } from '../game/engine';
 import { rebirthModifiers, computeFragments } from '../game/rebirth';
-import { GRID_SIZE } from '../game/grid';
+import { START_SLOT } from '../game/grid';
 
-const CENTER_SLOT = Math.floor(GRID_SIZE / 2); // slot 4 of the 3×3 grid
+const CENTER_SLOT = START_SLOT; // first slot to unlock (centre of the 3×3 grid)
 
 function baseAbilities(): Record<string, AbilityState> {
   const out: Record<string, AbilityState> = {};

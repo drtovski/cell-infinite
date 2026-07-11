@@ -7,7 +7,7 @@ import { effectiveGrowth, nextLevelCost, planPurchase } from '../game/economy';
 import { MILESTONES, nextMilestone } from '../config/milestones';
 import type { BuyMode, CellInstance } from '../game/types';
 import { fmt } from '../game/format';
-import { GRID_COLS, GRID_SIZE } from '../game/grid';
+import { GRID_COLS, GRID_SIZE, isSlotUnlocked } from '../game/grid';
 import type { CSSProperties } from 'react';
 
 const BUY_MODES: { value: BuyMode; label: string }[] = [
@@ -40,7 +40,7 @@ function RelocateGrid({ cell }: { cell: CellInstance }) {
       {Array.from({ length: GRID_SIZE }, (_, slot) => {
         const here = occupied.get(slot);
         const isSelf = here?.id === cell.id;
-        const locked = slot >= unlockedSlots;
+        const locked = !isSlotUnlocked(slot, unlockedSlots);
         const disabled = locked || (!!here && !isSelf);
         const hue = here ? getCellType(here.typeId).visual.hueA : 200;
         return (
