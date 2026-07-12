@@ -111,6 +111,15 @@ npm run tauri build                        # produce a native installer/binary
 
 ---
 
+## Controls
+
+- **Click a cell** to harvest active energy (crits burst gold).
+- **Space / Enter** — harvest the currently selected cell (keyboard).
+- **1–4** — fire the corresponding unlocked ability.
+- **Esc** — close any modal.
+
+---
+
 ## Balancing & extending
 
 Everything a designer would tune lives in `src/config/`. To add a cell type,
