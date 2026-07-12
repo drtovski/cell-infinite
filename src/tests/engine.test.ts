@@ -60,6 +60,20 @@ describe('synergy', () => {
     const d = computeDerived({ ...g, cells }, rebirthModifiers({}, D(0)));
     expect(d.bestChain).toBe(3);
   });
+
+  it('a longer connected chain adds a global multiplier', () => {
+    const g = freshGame();
+    // Pulsars have no passive effect on production or the global mult, so a
+    // 3-chain isolates the chain bonus: globalMult == 1 + 0.06*(3-1) = 1.12.
+    const cells: CellInstance[] = [
+      { id: 'g', typeId: 'ion-core', level: 1, slot: 4, pulseCharge: 0 },
+      { id: 'p1', typeId: 'pulsar', level: 1, slot: 3, pulseCharge: 0 },
+      { id: 'p2', typeId: 'pulsar', level: 1, slot: 5, pulseCharge: 0 },
+    ];
+    const d = computeDerived({ ...g, cells }, rebirthModifiers({}, D(0)));
+    expect(d.bestChain).toBe(3);
+    expect(d.globalMult.toNumber()).toBeCloseTo(1.12, 6);
+  });
 });
 
 describe('pulse cells', () => {

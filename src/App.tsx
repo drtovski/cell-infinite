@@ -15,14 +15,17 @@ import { SettingsModal } from './components/modals/SettingsModal';
 import { StatsModal } from './components/modals/StatsModal';
 import { PlaceCellModal } from './components/modals/PlaceCellModal';
 import { formatCountdown } from './game/format';
+import { ABILITIES } from './config/abilities';
+import { BALANCE } from './config/balance';
 
 function ReactorStatus() {
   const buffs = useGame((s) => s.buffs);
   const speed = useGame((s) => s.derived.speedMult);
   const chain = useGame((s) => s.derived.bestChain);
+  const chainPct = Math.round(BALANCE.chainBonusPerCell * Math.max(0, chain - 1) * 100);
   return (
     <div className="row wrap" style={{ gap: 8 }}>
-      {chain > 1 && <span className="tag primary-text">⧉ Chain {chain}</span>}
+      {chain > 1 && <span className="tag primary-text">⧉ Chain {chain} · +{chainPct}%</span>}
       {speed > 1.001 && <span className="tag" style={{ color: 'var(--good)' }}>⧗ ×{speed.toFixed(2)} speed</span>}
       {buffs.map((b) => (
         <span key={b.id} className="tag" style={{ color: `hsl(${b.hue} 90% 72%)` }}>
@@ -65,6 +68,39 @@ export default function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  // Keyboard: Space/Enter harvests the selected cell; 1-4 fire unlocked abilities.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const tag = (document.activeElement?.tagName ?? '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea') return;
+      const g = useGame.getState();
+
+      if (e.key === ' ' || e.key === 'Enter') {
+        const el = document.querySelector('.cell.selected') as HTMLElement | null;
+        const id = g.selectedCellId ?? g.cells[0]?.id;
+        if (!id) return;
+        e.preventDefault();
+        const r = el?.getBoundingClientRect();
+        const x = r ? r.left + r.width / 2 : window.innerWidth / 2;
+        const y = r ? r.top + r.height / 2 : window.innerHeight / 2;
+        sound.unlock();
+        g.clickCell(id, x, y);
+        return;
+      }
+
+      const n = Number(e.key);
+      if (Number.isInteger(n) && n >= 1 && n <= ABILITIES.length) {
+        const def = ABILITIES[n - 1];
+        if (g.abilities[def.id]?.unlocked) {
+          sound.unlock();
+          g.activateAbility(def.id);
+        }
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   if (!initialized) {
     return (

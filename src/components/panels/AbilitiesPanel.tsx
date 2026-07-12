@@ -22,7 +22,7 @@ export function AbilitiesPanel() {
 
   return (
     <div className="card-grid">
-      {ABILITIES.map((def) => {
+      {ABILITIES.map((def, i) => {
         const st = abilities[def.id];
         const unlocked = st?.unlocked;
         const active = (st?.activeRemaining ?? 0) > 0;
@@ -54,7 +54,7 @@ export function AbilitiesPanel() {
               <div>
                 <h4>{def.name}</h4>
                 <p className="small muted">
-                  {def.duration > 0 ? `${def.duration}s · ` : ''}CD {def.cooldown}s
+                  {def.duration > 0 ? `${def.duration}s · ` : ''}CD {def.cooldown}s · key {i + 1}
                 </p>
               </div>
             </div>

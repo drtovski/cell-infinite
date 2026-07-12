@@ -30,6 +30,12 @@ export const BALANCE = {
   baseCritChance: 0.0,
   baseCritMult: 2.5,
 
+  // --- Chain synergy -----------------------------------------------------
+  /** Each cell in the largest connected chain beyond the first adds this
+   *  much to a global production multiplier — so wiring cells together pays
+   *  off on top of per-neighbour amplifier synergy. */
+  chainBonusPerCell: 0.06,
+
   // --- Rebirth -----------------------------------------------------------
   /** Minimum energy earned in a run before Rebirth is allowed. */
   rebirthUnlockEnergy: 1e6,
