@@ -163,14 +163,18 @@ export function computeDerived(state: GameState, mod: RebirthModifiers): Derived
   }
   for (const b of state.buffs) if (b.kind === 'globalMult') globalMult = globalMult.mul(b.value);
 
+  // Chain synergy: a longer connected lattice multiplies everything.
+  const occupied = new Set<number>(cells.map((c) => c.slot));
+  const bestChain = largestChain(occupied);
+  const chainMult = 1 + BALANCE.chainBonusPerCell * Math.max(0, bestChain - 1);
+  globalMult = globalMult.mul(chainMult);
+
   const perSecond = base.mul(globalMult).mul(speedMult);
   const clickPower = Decimal.max(
     BALANCE.clickFlatFloor,
     perSecond.mul(BALANCE.clickFractionOfPerSecond),
   ).mul(mod.clickMult);
 
-  const occupied = new Set<number>(cells.map((c) => c.slot));
-  const bestChain = largestChain(occupied);
   const projectedFragments = computeFragments(state.run.totalEnergyThisRun);
 
   return {
